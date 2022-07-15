@@ -3,6 +3,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import dts from 'rollup-plugin-dts'
 
 const pkg = require('./package.json');
 
@@ -13,17 +14,13 @@ const plugins = [
     terser()
 ];
 
-const external = [
-    ...Object.keys(pkg.dependencies || {}),
-    ...Object.keys(pkg.peerDependencies || {}),
-]
-
 export default [
     {
         input: 'src/index.ts',
         output: {
             dir: 'dist',
             format: 'cjs',
+            exports: 'named',
             preserveModules: true,
             preserveModulesRoot: 'src',
             sourcemap: true,
@@ -35,7 +32,6 @@ export default [
                 declarationDir: 'dist' 
             }),
         ],
-        external,
     },
     {
         input: 'src/index.ts',
@@ -53,6 +49,10 @@ export default [
                 declarationDir: 'dist/esm',
             }),
         ],
-        external,
     },
+    {
+        input: "dist/esm/index.d.ts",
+        output: [{ file: pkg.types, format: "esm" }],
+        plugins: [dts()]
+    }
 ];

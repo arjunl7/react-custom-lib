@@ -14,6 +14,11 @@ const plugins = [
     terser()
 ];
 
+const external = [ 
+    // ...Object.keys(pkg.dependencies || {}),
+    // ...Object.keys(pkg.peerDependencies || {}),
+]
+
 export default [
     {
         input: 'src/index.ts',
@@ -32,6 +37,7 @@ export default [
                 declarationDir: 'dist' 
             }),
         ],
+        external
     },
     {
         input: 'src/index.ts',
@@ -49,6 +55,7 @@ export default [
                 declarationDir: 'dist/esm',
             }),
         ],
+        external,
     },
     {
         input: "dist/esm/index.d.ts",
